@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser OS Emulator</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #eee;
+            font-family: monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #00ff00;
+        }
+        /* This container holds the terminal screen */
+        #screen_container {
+            white-space: pre;
+            font-family: Courier, monospace;
+            font-size: 14px;
+            line-height: 16px;
+            background-color: #000;
+            border: 2px solid #333;
+            padding: 10px;
+            width: 800px;
+            height: 400px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+        }
+        #status {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
+    <script src="https://copy.sh/v86/build/libv86.js"></script>
+</head>
+<body>
+
+    <h1>WebAssembly Linux Emulator</h1>
+    
+    <div id="screen_container">Loading emulator engine...</div>
+
+    <div id="status">Status: Booting Alpine Linux via WebAssembly...</div>
+
+    <script>
+        window.onload = function() {
+            // Configuration for the v86 emulator
+            var emulator = new V86Starter({
+                wasm_path: "https://copy.sh/v86/build/v86.wasm",
+                memory_size: 64 * 1024 * 1024, // 64MB RAM
+                vga_as_text_mode: true,
+                
+                // Link to a tiny, pre-compiled Alpine Linux ISO
+                bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
+                iso: { url: "https://copy.sh/v86/images/alpine319.iso" },
+                
+                // Connecting the emulator core to our HTML container
+                screen_container: document.getElementById("screen_container"),
+                autostart: true,
+            });
+
+            // Update status once booted
+            emulator.add_listener("emulator-ready", function() {
+                document.getElementById("status").innerText = "Status: Running. Click inside the box to type.";
+            });
+        };
+    </script>
+</body>
+</html>
