@@ -23,7 +23,6 @@
             margin-bottom: 15px;
             color: #00ff00;
         }
-        /* This container holds the terminal screen */
         #screen_container {
             white-space: pre;
             font-family: Courier, monospace;
@@ -43,36 +42,32 @@
             color: #888;
         }
     </style>
-    <script src="https://copy.sh/v86/build/libv86.js"></script>
+    <script src="https://unpkg.com/v86@0.14.13/build/libv86.js"></script>
 </head>
 <body>
 
     <h1>WebAssembly Linux Emulator</h1>
-    
     <div id="screen_container">Loading emulator engine...</div>
-
-    <div id="status">Status: Booting Alpine Linux via WebAssembly...</div>
+    <div id="status">Status: Initializing WebAssembly...</div>
 
     <script>
         window.onload = function() {
-            // Configuration for the v86 emulator
             var emulator = new V86Starter({
-                wasm_path: "https://copy.sh/v86/build/v86.wasm",
-                memory_size: 64 * 1024 * 1024, // 64MB RAM
+                // Loading engine from unpkg mirror
+                wasm_path: "https://unpkg.com/v86@0.14.13/build/v86.wasm",
+                memory_size: 32 * 1024 * 1024, // Lowered to 32MB for faster loading
                 vga_as_text_mode: true,
                 
-                // Link to a tiny, pre-compiled Alpine Linux ISO
-                bios: { url: "https://copy.sh/v86/bios/seabios.bin" },
-                iso: { url: "https://copy.sh/v86/images/alpine319.iso" },
+                // Using a tiny, ultra-lightweight KolibriOS or FreeDOS image hosted on a reliable open source mirror
+                bios: { url: "https://unpkg.com/v86@0.14.13/bios/seabios.bin" },
+                fda: { url: "https://unpkg.com/v86@0.14.13/images/freedos722.img" },
                 
-                // Connecting the emulator core to our HTML container
                 screen_container: document.getElementById("screen_container"),
                 autostart: true,
             });
 
-            // Update status once booted
             emulator.add_listener("emulator-ready", function() {
-                document.getElementById("status").innerText = "Status: Running. Click inside the box to type.";
+                document.getElementById("status").innerText = "Status: Running FreeDOS! Click inside to type.";
             });
         };
     </script>
