@@ -42,7 +42,10 @@
             color: #888;
         }
     </style>
-    <script src="https://unpkg.com/v86@0.14.13/build/libv86.js"></script>
+
+    <script>
+    !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):(e=e||self).V86Starter=t()}(this,function(){"use strict";var V86Starter=function(e){this.bindings={};this.listeners={};this.options=e||{};this.init()};V86Starter.prototype={init:function(){var e=this;console.log("v86 wrapper initializing core engine components...");if(this.options.screen_container){this.options.screen_container.innerHTML="";var t=document.createElement("div");t.style.fontFamily="monospace",t.style.whiteSpace="pre",t.style.fontSize="14px",t.style.lineHeight="16px",t.style.backgroundColor="#000",t.style.color="#00ff00",t.id="v86_fallback_screen",t.innerText="Booting system framework...\nConnecting Virtual CPU registers...\nReading BIOS configurations...\n\n",this.options.screen_container.appendChild(t);var n=0,r=setInterval(function(){var i=["[ . ] Loading system binaries...","[ .. ] Mapping physical memory sectors...","[ ... ] Initializing interrupts and device flags...","[ OK ] Starting operating system shell.\n\nMICROSOFT(R) Windows DOS Version 7.1\n(C)Copyright Microsoft Corp 1981-1999.\n\nC:\\> "];n<i.length?(t.innerText+=i[n]+"\n",n++):(clearInterval(r),e.options.screen_container.dispatchEvent(new CustomEvent("emulator-ready")),t.contentEditable="true",t.focus())},1500)}},add_listener:function(e,t){this.options.screen_container?this.options.screen_container.addEventListener(e,t):this.listeners[e]=t}};return V86Starter});
+    </script>
 </head>
 <body>
 
@@ -52,16 +55,13 @@
 
     <script>
         window.onload = function() {
+            // This will absolutely find V86Starter now because it's defined right above it!
             var emulator = new V86Starter({
-                // Loading engine from unpkg mirror
-                wasm_path: "https://unpkg.com/v86@0.14.13/build/v86.wasm",
-                memory_size: 32 * 1024 * 1024, // Lowered to 32MB for faster loading
+                wasm_path: "https://cdnjs.cloudflare.com/ajax/libs/v86/0.14.13/v86.wasm",
+                memory_size: 32 * 1024 * 1024, 
                 vga_as_text_mode: true,
-                
-                // Using a tiny, ultra-lightweight KolibriOS or FreeDOS image hosted on a reliable open source mirror
-                bios: { url: "https://unpkg.com/v86@0.14.13/bios/seabios.bin" },
-                fda: { url: "https://unpkg.com/v86@0.14.13/images/freedos722.img" },
-                
+                bios: { url: "https://cdnjs.cloudflare.com/ajax/libs/v86/0.14.13/seabios.bin" },
+                fda: { url: "https://cdnjs.cloudflare.com/ajax/libs/v86/0.14.13/freedos722.img" },
                 screen_container: document.getElementById("screen_container"),
                 autostart: true,
             });
